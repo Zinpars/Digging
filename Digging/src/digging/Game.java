@@ -4,6 +4,10 @@ public class Game {
     private World world;
     private final Player player = new Player();
 
+    private int staminaUpgradeCost = 1;
+    private int oreValueUpgradeCost = 5;
+    private int bombsUpgradeCost = 10;
+
     public Game() {
         resetRun();
     }
@@ -23,6 +27,31 @@ public class Game {
 
     public Resource tryMovePlayerAndCollect(int dx, int dy) {
         return world.tryMoveAndCollect(player, dx, dy);
+    }
+
+    public boolean buyStaminaUpgrade() {
+        if (!player.spendMoney(staminaUpgradeCost)) return false;
+
+        player.addMaxStamina(1);
+        return true;
+    }
+
+    public boolean buyOreValueUpgrade() {
+        if (!player.spendMoney(oreValueUpgradeCost)) return false;
+
+        player.addOreValue(1);
+        return true;
+    }
+
+    public boolean buyBombUpgrade() {
+        if (!player.spendMoney(bombsUpgradeCost)) return false;
+
+        player.addMaxBombs(1);
+        return true;
+    }
+
+    public void useBomb() {
+        world.useBomb(player);
     }
 }
 

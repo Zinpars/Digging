@@ -1,0 +1,10 @@
+.hud-text {
+    -fx-font-size: 16px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.button {
+    -fx-background-color: #333;
+    -fx-text-fill: white;
+}

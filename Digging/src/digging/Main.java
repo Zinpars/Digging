@@ -29,6 +29,7 @@ public class Main extends Application {
     private final Game game = new Game();
     private final Player player = game.getPlayer();
     private World world = game.getWorld();
+    Hud hud = new Hud(game);
 
 
     private final static Image copperImage = new Image("copper_ore.png");
@@ -86,15 +87,8 @@ public class Main extends Application {
         VBox vbox = new VBox();
         vbox.setStyle("-fx-background-color: #2b2b2b; -fx-text-fill: #FFFFFF");
         vbox.setPrefSize(200, 1000);
+        vbox.getChildren().add(hud.getView());
 
-
-        staminaText = new Text("Stamina: " + player.getStamina());
-        staminaText.setFill(WHITE);
-        vbox.getChildren().add(staminaText);
-
-        moneyText = new Text("Money: " + player.getMoney());
-        moneyText.setFill(WHITE);
-        vbox.getChildren().add(moneyText);
 
         //Setup stage and scene
         BorderPane borderPane = new BorderPane();
@@ -102,6 +96,9 @@ public class Main extends Application {
         borderPane.setRight(vbox);
 
         Scene scene = new Scene(borderPane, WORLD_WIDTH, WORLD_HEIGHT);
+        scene.getStylesheets().add(
+                getClass().getResource("styles.css").toExternalForm()
+        );
         stage.setScene(scene);
         stage.show();
 
@@ -113,6 +110,7 @@ public class Main extends Application {
                 case S, DOWN -> pickedUp = game.tryMovePlayerAndCollect(0, 1);
                 case A, LEFT -> pickedUp = game.tryMovePlayerAndCollect(-1, 0);
                 case D, RIGHT -> pickedUp = game.tryMovePlayerAndCollect(1, 0);
+                case G -> player.addMoney(1000);
             }
 
 
@@ -122,7 +120,7 @@ public class Main extends Application {
             }
 
             updatePlayerView();
-            updateTile(player.getTileX(), player.getTileY());
+            updateTileViews();
             updateHUD();
             if (player.getStamina() <= 0) {
                 resetGame();
@@ -180,18 +178,18 @@ public class Main extends Application {
 
         for (Tile tile : world.getAllTiles()) {
             tileViews[tile.getX()][tile.getY()].setImage(tile.getTileImage());
-//            if (tile.getResource() != null) {
-//                ImageView rv = tile.getResource().getView();
-//                rv.setLayoutX(tile.getX() * TILE_SIZE);
-//                rv.setLayoutY(tile.getY() * TILE_SIZE);
-//                entityLayer.getChildren().add(rv);
-//            }
+        }
+    }
+
+    private void updateTileViews() {
+        for (Tile tile : world.getAllTiles()) {
+            if (tile.getY() == 0) continue;
+            tileViews[tile.getX()][tile.getY()].setImage(tile.getTileImage());
         }
     }
 
     private void updateTile(int x, int y) {
         if (y == 0) return;
-        //world.getTile(x,y).getResource().getView()
         tileViews[x][y].setImage(world.getTile(x, y).getTileImage());
     }
 
@@ -201,8 +199,9 @@ public class Main extends Application {
     }
 
     void updateHUD() {
-        staminaText.setText("Stamina: " + player.getStamina());
-        moneyText.setText("Money: " + player.getMoney());
+        hud.updateStamina();
+        hud.updateMoney();
+        hud.updateBombs();
     }
 
     public static void main (String[]args){

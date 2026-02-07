@@ -67,12 +67,16 @@ public class World {
         Tile newTile = tiles[newX][newY];
         player.move(dx, dy);
         player.consumeStamina(newTile.getStaminaCost());
-        Resource r = newTile.getResource();
+        return collectTile(player, newTile);
+    }
+
+    public Resource collectTile(Player player, Tile tile) {
+        Resource r = tile.getResource();
         if (r != null) {
             r.onStep(player);
-            newTile.removeResource();
+            tile.removeResource();
         }
-        newTile.setBase(empty);
+        tile.setBase(empty);
         return r;
     }
 
@@ -92,7 +96,14 @@ public class World {
                 return layer;
             }
         }
-       // throw new IllegalStateException("No layer for y=" + y);
-        return layers.getFirst();
+        throw new IllegalStateException("No layer for y=" + y);
+    }
+
+    public void useBomb(Player player) {
+        if (player.getBombs() <= 0) return;
+
+        for (int i = 0; i < 3; i++) {
+            collectTile(player, getTile(player.getTileX() + i, player.getTileY()));
+        }
     }
 }

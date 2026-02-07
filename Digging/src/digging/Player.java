@@ -4,8 +4,12 @@ public class Player {
     private int tileX;
     private int tileY;
     private int stamina;
-    private int maxStamina = 5;
     private int money = 0;
+    private int bombs = 0;
+
+    private int maxStamina = 5;
+    private int maxBombs = 0;
+    private int oreValueUpgrade = 0;
 
     public Player() {
         reset();
@@ -22,14 +26,16 @@ public class Player {
     public int getStamina() {
         return stamina;
     }
-
     public int getMoney() {
         return money;
+    }
+    public int getBombs() {
+        return bombs;
     }
 
     public void addMoney(int amount) {
         if (amount <= 0) return;
-        money += amount;
+        money += amount + oreValueUpgrade;
     }
 
     public boolean spendMoney(int amount) {
@@ -47,10 +53,18 @@ public class Player {
         maxStamina += i;
     }
 
+    public void addOreValue(int i) {
+        oreValueUpgrade += i;
+    }
+
     public void reset() {
         tileX = 10;
         tileY = 0;
         stamina = maxStamina;
+        bombs = maxBombs;
     }
 
+    public void addMaxBombs(int i) {
+        maxBombs += i;
+    }
 }
