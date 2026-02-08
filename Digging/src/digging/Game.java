@@ -3,6 +3,7 @@ package digging;
 public class Game {
     private World world;
     private final Player player = new Player();
+    private int day = 0;
 
     private int staminaUpgradeCost = 1;
     private int oreValueUpgradeCost = 5;
@@ -16,16 +17,18 @@ public class Game {
     public void resetRun() {
         world = new World();
         player.reset();
+        day++;
     }
 
     public World getWorld() {
         return world;
     }
-
     public Player getPlayer() {
         return player;
     }
-
+    public int getDay() {
+        return day;
+    }
     public int getStaminaUpgradeCost() {
         return staminaUpgradeCost;
     }

@@ -5,13 +5,13 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Main extends Application {
     public static final int TILE_SIZE = 50;
+    private static final int RESOURCE_SIZE = TILE_SIZE / 2;
     public final int WORLD_WIDTH = 1200;
     public final int WORLD_HEIGHT = 1000;
     private ImageView playerView;
@@ -40,12 +40,10 @@ public class Main extends Application {
         updateHUD();
     });
 
-
-
-
     private final static Image copperImage = new Image("copper_ore.png");
-    private final static Image silverImage = new Image("copper_ore.png");
-    private final static Image playerImage = new Image("slime.png");
+    private final static Image ironImage = new Image("iron_ore.png");
+    private final static Image goldImage = new Image("gold_ore.png");
+    private final static Image playerImage = new Image("Sprite-0001.png");
 
     @Override
     public void start(Stage stage) {
@@ -74,12 +72,8 @@ public class Main extends Application {
 
         for (int y = 0; y < world.getHeight(); y++) {
             for (int x = 0; x < world.getWidth(); x++) {
-
-
                 ImageView tile = new ImageView();
-
-                    tile.setImage(world.getTile(x,y).getTileImage());
-
+                tile.setImage(world.getTile(x,y).getTileImage());
 
                 tile.setFitWidth(TILE_SIZE);
                 tile.setFitHeight(TILE_SIZE);
@@ -88,10 +82,8 @@ public class Main extends Application {
 
                 tileViews[x][y] = tile;
                 tileLayer.getChildren().add(tile);
-
             }
         }
-
         updateTileViews();
         buildResourceViews();
 
@@ -100,7 +92,6 @@ public class Main extends Application {
         vbox.setStyle("-fx-background-color: #2b2b2b; -fx-text-fill: #FFFFFF");
         vbox.setPrefSize(200, 1000);
         vbox.getChildren().add(hud.getView());
-
 
         //Setup stage and scene
         BorderPane borderPane = new BorderPane();
@@ -124,13 +115,10 @@ public class Main extends Application {
                 case D, RIGHT -> pickedUp = game.tryMovePlayerAndCollect(1, 0);
                 case G -> player.addMoney(1000);
             }
-
-
             if (pickedUp != null) {
                 ImageView view = resourceViews.remove(pickedUp);
                 entityLayer.getChildren().remove(view);
             }
-
             updatePlayerView();
             updateTileViews();
             updateHUD();
@@ -150,8 +138,8 @@ public class Main extends Application {
             if (r == null) continue;
 
             ImageView view = createResourceView(r);
-            view.setLayoutX(tile.getX() * TILE_SIZE);
-            view.setLayoutY(tile.getY() * TILE_SIZE);
+            view.setLayoutX(tile.getX() * TILE_SIZE + (double) (TILE_SIZE - RESOURCE_SIZE) / 2);
+            view.setLayoutY(tile.getY() * TILE_SIZE + (double) (TILE_SIZE - RESOURCE_SIZE) / 2);
 
             resourceViews.put(r, view);
             entityLayer.getChildren().add(view);
@@ -162,15 +150,15 @@ public class Main extends Application {
     private ImageView createResourceView(Resource r) {
         Image image = switch (r.getType()) {
             case "copper" -> copperImage;
-            case "silver" -> silverImage;
+            case "iron" -> ironImage;
+            case "gold" -> goldImage;
             default -> playerImage;
         };
         ImageView view = new ImageView(image);
-        view.setFitWidth(TILE_SIZE);
-        view.setFitHeight(TILE_SIZE);
+        view.setFitWidth(RESOURCE_SIZE);
+        view.setFitHeight(RESOURCE_SIZE);
         return view;
     }
-
 
     public void resetGame() {
        game.resetRun();
@@ -180,8 +168,8 @@ public class Main extends Application {
         updatePlayerView();
         updateHUD();
         updateCamera();
+        hud.updateDay();
     }
-
 
     private void updateTileViews() {
         for (Tile tile : world.getAllTiles()) {
@@ -231,8 +219,6 @@ public class Main extends Application {
         pane.setTranslateX(-cameraX);
         pane.setTranslateY(-cameraY);
     }
-
-
 
     static void main (String[]args){
         launch(args);

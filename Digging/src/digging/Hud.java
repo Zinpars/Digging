@@ -13,6 +13,7 @@ public class Hud {
     private final Label bombLabel;
     private final Label oreValueLabel;
     private final Label bombRadiusLabel;
+    private final Label dayLabel;
     private final Label upgradesTitle;
     private final Button bombUse;
     private final Button staminaUpgrade;
@@ -33,10 +34,11 @@ public class Hud {
 
         statsTitle = new Label("Stats");
         staminaLabel = new Label("Stamina: 5 / 5");
-        moneyLabel = new Label("Money: 0");
+        moneyLabel = new Label("Money: 0 $");
         bombLabel = new Label("Bombs: 0 / 0");
         oreValueLabel = new Label("Ore Value: 1");
         bombRadiusLabel = new Label("Bomb Radius: 2");
+        dayLabel = new Label("Day: 1");
 
         statsTitle.getStyleClass().add("hud-title");
         staminaLabel.getStyleClass().add("hud-text");
@@ -44,6 +46,7 @@ public class Hud {
         bombLabel.getStyleClass().add("hud-text");
         oreValueLabel.getStyleClass().add("hud-text");
         bombRadiusLabel.getStyleClass().add("hud-text");
+        dayLabel.getStyleClass().add("hud-text");
 
         bombUse = new Button("Use Bomb");
 
@@ -107,23 +110,21 @@ public class Hud {
         HBox bombUpgradeBox = new HBox(10, bombUpgrade, bombCostLabel);
         HBox bombRadiusBox = new HBox(10, bombRadiusUpgrade, bombRadiusCostLabel);
 
-        VBox vbox = new VBox(10, statsTitle, staminaLabel, moneyLabel, oreValueLabel, bombRadiusLabel, bombBox, upgradesTitle, staminaBox, oreValueBox, bombUpgradeBox, bombRadiusBox);
+        VBox vbox = new VBox(10, statsTitle, staminaLabel, moneyLabel, oreValueLabel, bombRadiusLabel, bombBox, dayLabel, upgradesTitle, staminaBox, oreValueBox, bombUpgradeBox, bombRadiusBox);
         vbox.setPadding(new Insets(10));
 
         return vbox;
     }
 
     public void updateStamina() { staminaLabel.setText("Stamina: " + player.getStamina() + " / " + player.getMaxStamina()); }
-    public void updateMoney() { moneyLabel.setText("Money: " + player.getMoney()); }
+    public void updateMoney() { moneyLabel.setText("Money: " + player.getMoney() + " $"); }
     public void updateBombs() { bombLabel.setText("Bombs: " + player.getBombs() + " / " + player.getMaxBombs()); }
-    public void updateOreValue() { oreValueLabel.setText("Ore Value: " + (player.getOreValueUpgrade() + 1)); }
+    public void updateOreValue() { oreValueLabel.setText("Ore Value: " + player.getOreValueUpgrade()); }
     public void updateBombRadius() {bombRadiusLabel.setText("Bomb Radius: " + player.getBombRadius());}
     public void updateStaminaCost() {staminaCostLabel.setText("Cost: " + game.getStaminaUpgradeCost());}
     public void updateOreValueCost() {oreValueCostLabel.setText("Cost: " + game.getOreValueUpgradeCost());}
     public void updateBombCost() {bombCostLabel.setText("Cost: " + game.getBombsUpgradeCost());}
     public void updateBombRadiusCost() {bombRadiusCostLabel.setText("Cost: " + game.getBombRadiusUpgradeCost());}
-
-
-
+    public void updateDay() {dayLabel.setText("Day: " + game.getDay());}
 }
 

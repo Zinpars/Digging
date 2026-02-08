@@ -7,7 +7,8 @@ public class World {
     public Tile[][] tiles;
     private final int width = 20;
     private final int height = 100;
-    private static double copperChance = 0.15;
+    private static double ironChance = 0.3;
+    private static double goldChance = 0.05;
 
     private final BaseTile empty = new BaseTile(-1, 0);
     private final BaseTile sky = new BaseTile(0, 0);
@@ -17,9 +18,10 @@ public class World {
 
     List<Layer> layers = List.of(
             new Layer(-10, 0, sky, 0.0),
-            new Layer(1, 10, dirtLayer1, 0.15),
-            new Layer(11, 120, dirtLayer2, 0.25),
-            new Layer(121, 10000, dirtLayer3, 0.35)
+            new Layer(1, 15, dirtLayer1, 0.15),
+            new Layer(16, 35, dirtLayer2, 0.25),
+            new Layer(36, 60, dirtLayer3, 0.35),
+            new Layer(61, 10000, dirtLayer3, 0.45)
     );
 
     public World () {
@@ -36,13 +38,19 @@ public class World {
                 Resource resource = null;
 
                 if (Math.random() < layer.resourceChance()) {
-                   // resource = createRandomResourceForLayer(layer);
-                    resource = new CopperResource();
+                    resource = createRandomResourceForLayer(layer);
                 }
 
                 tiles[x][y] = new Tile(x, y, base, resource);
             }
         }
+    }
+
+    private Resource createRandomResourceForLayer(Layer layer) {
+        double rnd = Math.random();
+        if (rnd < goldChance * (layer.resourceChance() + 1)) return new GoldResource();
+        else if (rnd < ironChance * (layer.resourceChance() + 1)) return new IronResource();
+        else return new CopperResource();
     }
 
     public int getWidth() {

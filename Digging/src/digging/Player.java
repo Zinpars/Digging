@@ -9,7 +9,7 @@ public class Player {
 
     private int maxStamina = 5;
     private int maxBombs = 0;
-    private int oreValueUpgrade = 0;
+    private int oreValueUpgrade = 1;
     private int bombRadius = 2;
 
     public Player() {
@@ -36,7 +36,7 @@ public class Player {
 
     public void addMoney(int amount) {
         if (amount <= 0) return;
-        money += amount + oreValueUpgrade;
+        money += amount * oreValueUpgrade;
     }
 
     public boolean spendMoney(int amount) {
