@@ -1,30 +1,25 @@
 package digging;
 
 import javafx.application.Application;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import static javafx.scene.paint.Color.WHITE;
 
 public class Main extends Application {
     public static final int TILE_SIZE = 50;
     public final int WORLD_WIDTH = 1200;
     public final int WORLD_HEIGHT = 1000;
     private ImageView playerView;
-    private Text staminaText;
-    private Text moneyText;
     private ImageView[][] tileViews;
+    private Pane pane;
     private Pane entityLayer;
+    double cameraX;
+    double cameraY;
     Map<Resource, ImageView> resourceViews = new HashMap<>();
 
     private final Game game = new Game();
@@ -49,12 +44,13 @@ public class Main extends Application {
 
 
     private final static Image copperImage = new Image("copper_ore.png");
+    private final static Image silverImage = new Image("copper_ore.png");
     private final static Image playerImage = new Image("slime.png");
 
     @Override
     public void start(Stage stage) {
         // Create world layers
-        Pane pane = new Pane();
+        pane = new Pane();
         Pane tileLayer   = new Pane();
         entityLayer = new Pane();
         Pane effectLayer = new Pane();
@@ -96,7 +92,7 @@ public class Main extends Application {
             }
         }
 
-        resetTileViews();
+        updateTileViews();
         buildResourceViews();
 
         // Create menu
@@ -138,6 +134,7 @@ public class Main extends Application {
             updatePlayerView();
             updateTileViews();
             updateHUD();
+            updateCamera();
             if (player.getStamina() <= 0) {
                 resetGame();
             }
@@ -165,6 +162,7 @@ public class Main extends Application {
     private ImageView createResourceView(Resource r) {
         Image image = switch (r.getType()) {
             case "copper" -> copperImage;
+            case "silver" -> silverImage;
             default -> playerImage;
         };
         ImageView view = new ImageView(image);
@@ -177,25 +175,13 @@ public class Main extends Application {
     public void resetGame() {
        game.resetRun();
         world = game.getWorld();
-        // 3️⃣ Update tile visuals
-        resetTileViews();       // or update existing ImageViews
-
+        updateTileViews();
         buildResourceViews();
-
-        // 4️⃣ Update player visual
         updatePlayerView();
-
-        // 5️⃣ Update HUD
         updateHUD();
+        updateCamera();
     }
 
-    void resetTileViews() {
-        entityLayer.getChildren().clear(); // removes all resources + player
-
-        for (Tile tile : world.getAllTiles()) {
-            tileViews[tile.getX()][tile.getY()].setImage(tile.getTileImage());
-        }
-    }
 
     private void updateTileViews() {
         for (Tile tile : world.getAllTiles()) {
@@ -225,7 +211,30 @@ public class Main extends Application {
         hud.updateBombs();
     }
 
-    public static void main (String[]args){
+    void updateCamera() {
+        cameraX = player.getTileX() * TILE_SIZE - (double) WORLD_WIDTH / 2;
+        cameraY = player.getTileY() * TILE_SIZE - (double) WORLD_HEIGHT / 2;
+
+        clampCamera();
+        applyCamera();
+    }
+
+    void clampCamera() {
+        double maxX = world.getWidth() * TILE_SIZE - WORLD_WIDTH;
+        double maxY = world.getHeight() * TILE_SIZE - WORLD_HEIGHT;
+
+        cameraX = Math.max(0, Math.min(cameraX, maxX));
+        cameraY = Math.max(0, Math.min(cameraY, maxY));
+    }
+
+    void applyCamera() {
+        pane.setTranslateX(-cameraX);
+        pane.setTranslateY(-cameraY);
+    }
+
+
+
+    static void main (String[]args){
         launch(args);
     }
 }

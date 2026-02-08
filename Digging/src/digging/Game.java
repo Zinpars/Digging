@@ -26,6 +26,19 @@ public class Game {
         return player;
     }
 
+    public int getStaminaUpgradeCost() {
+        return staminaUpgradeCost;
+    }
+    public int getOreValueUpgradeCost() {
+        return oreValueUpgradeCost;
+    }
+    public int getBombsUpgradeCost() {
+        return bombsUpgradeCost;
+    }
+    public int getBombRadiusUpgradeCost() {
+        return bombRadiusUpgradeCost;
+    }
+
     public Resource tryMovePlayerAndCollect(int dx, int dy) {
         return world.tryMoveAndCollect(player, dx, dy);
     }
@@ -34,6 +47,7 @@ public class Game {
         if (!player.spendMoney(staminaUpgradeCost)) return false;
 
         player.addMaxStamina(1);
+        staminaUpgradeCost++;
         return true;
     }
 
@@ -41,6 +55,7 @@ public class Game {
         if (!player.spendMoney(oreValueUpgradeCost)) return false;
 
         player.addOreValue(1);
+        oreValueUpgradeCost *= 2;
         return true;
     }
 
@@ -48,6 +63,7 @@ public class Game {
         if (!player.spendMoney(bombsUpgradeCost)) return false;
 
         player.addMaxBombs(1);
+        bombsUpgradeCost *= 2;
         return true;
     }
 
@@ -59,6 +75,7 @@ public class Game {
         if (!player.spendMoney(bombRadiusUpgradeCost)) return false;
 
         player.addBombRadius(1);
+        bombRadiusUpgradeCost *= 2;
         return true;
     }
 }
