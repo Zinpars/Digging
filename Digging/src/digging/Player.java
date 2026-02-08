@@ -10,6 +10,7 @@ public class Player {
     private int maxStamina = 5;
     private int maxBombs = 0;
     private int oreValueUpgrade = 0;
+    private int bombRadius = 2;
 
     public Player() {
         reset();
@@ -44,6 +45,9 @@ public class Player {
         money -= amount;
         return true;
     }
+    public void spendBomb() {
+        bombs --;
+    }
 
     public void consumeStamina(int cost) {
         stamina -= cost;
@@ -57,6 +61,10 @@ public class Player {
         oreValueUpgrade += i;
     }
 
+    public void addBombRadius(int i) {
+        bombRadius += i;
+    }
+
     public void reset() {
         tileX = 10;
         tileY = 0;
@@ -67,4 +75,21 @@ public class Player {
     public void addMaxBombs(int i) {
         maxBombs += i;
     }
+
+    public int getBombRadius() {
+        return bombRadius;
+    }
+
+    public int getMaxStamina() {
+        return maxStamina;
+    }
+
+    public int getMaxBombs() {
+        return maxBombs;
+    }
+
+    public int getOreValueUpgrade() {
+        return oreValueUpgrade;
+    }
+
 }

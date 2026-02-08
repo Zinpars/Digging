@@ -7,6 +7,7 @@ public class Game {
     private int staminaUpgradeCost = 1;
     private int oreValueUpgradeCost = 5;
     private int bombsUpgradeCost = 10;
+    private int bombRadiusUpgradeCost = 50;
 
     public Game() {
         resetRun();
@@ -50,8 +51,15 @@ public class Game {
         return true;
     }
 
-    public void useBomb() {
-        world.useBomb(player);
+    public WorldChange useBomb() {
+        return world.useBomb(player);
+    }
+
+    public boolean buyBombRadiusUpgrade() {
+        if (!player.spendMoney(bombRadiusUpgradeCost)) return false;
+
+        player.addBombRadius(1);
+        return true;
     }
 }
 

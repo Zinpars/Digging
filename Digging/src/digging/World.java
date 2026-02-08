@@ -99,11 +99,34 @@ public class World {
         throw new IllegalStateException("No layer for y=" + y);
     }
 
-    public void useBomb(Player player) {
-        if (player.getBombs() <= 0) return;
+    public WorldChange useBomb(Player player) {
+        if (player.getBombs() <= 0) return null;
 
-        for (int i = 0; i < 3; i++) {
-            collectTile(player, getTile(player.getTileX() + i, player.getTileY()));
+        List<Tile> changedTiles = new ArrayList<>();
+        List<Resource> removedResources = new ArrayList<>();
+
+        int bombRadius = player.getBombRadius();
+        int count = 1;
+        for (int i = -(bombRadius); i <= bombRadius; i++) {
+            for (int j = -(count); j <= count; j++) {
+                int x = player.getTileX() + j;
+                int y = player.getTileY() + i;
+                if (!inBounds(x,y)) continue;
+
+                Tile tile = getTile(x, y);
+                Resource r = collectTile(player, tile);
+
+                changedTiles.add(tile);
+                if (r != null) removedResources.add(r);
+            }
+            if (i < (-1)) count++;
+            else if (i > 0) count--;
         }
+        player.spendBomb();
+        return new WorldChange(changedTiles, removedResources);
+    }
+
+    private boolean inBounds(int x, int y) {
+        return x >= 0 && x < width && y >= 0 && y < height;
     }
 }

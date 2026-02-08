@@ -11,6 +11,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static javafx.scene.paint.Color.WHITE;
@@ -29,7 +30,22 @@ public class Main extends Application {
     private final Game game = new Game();
     private final Player player = game.getPlayer();
     private World world = game.getWorld();
-    Hud hud = new Hud(game);
+    Hud hud = new Hud(game, () -> {
+        WorldChange change = game.useBomb();
+        if (change == null) return;
+
+        for (Tile tile : change.changedTiles()) {
+            updateTile(tile.getX(), tile.getY());
+        }
+
+        for (Resource r : change.removedResources()) {
+            removeResourceView(r);
+        }
+
+        updateHUD();
+    });
+
+
 
 
     private final static Image copperImage = new Image("copper_ore.png");
@@ -191,6 +207,11 @@ public class Main extends Application {
     private void updateTile(int x, int y) {
         if (y == 0) return;
         tileViews[x][y].setImage(world.getTile(x, y).getTileImage());
+    }
+
+    private void removeResourceView(Resource r) {
+        ImageView view = resourceViews.remove(r);
+        entityLayer.getChildren().remove(view);
     }
 
     void updatePlayerView() {
