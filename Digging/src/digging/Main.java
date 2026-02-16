@@ -9,11 +9,9 @@ import javafx.stage.Stage;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class Main extends Application {
-    public static final int TILE_SIZE = 50;
-    private static final int RESOURCE_SIZE = TILE_SIZE / 2;
-    public final int WORLD_WIDTH = 1200;
-    public final int WORLD_HEIGHT = 1000;
+
     private ImageView playerView;
     private ImageView[][] tileViews;
     private Pane pane;
@@ -39,6 +37,11 @@ public class Main extends Application {
 
         updateHUD();
     });
+
+    public static final int TILE_SIZE = 50;
+    private static final int RESOURCE_SIZE = TILE_SIZE / 2;
+    public final int WORLD_WIDTH = 1200;
+    public final int WORLD_HEIGHT = 640;
 
     private final static Image copperImage = new Image("copper_ore.png");
     private final static Image ironImage = new Image("iron_ore.png");
